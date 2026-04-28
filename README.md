@@ -56,10 +56,24 @@ cp /home/devops/.kube/config /root/.kube/config || true
 export KUBECONFIG=/root/.kube/config
 
 # --- ArgoCD installation ---
-kubectl create namespace argocd || true
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+su - devops -c "kubectl create namespace argocd || true"
+su - devops -c "kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml"
 
 sleep 60
 
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
+```
+
+## Access ArgoCD
+
+After deployment, in vm:
+
+```bash
+su - devpos -c "kubectl get svc -n argocd"
+```
+
+Then retrieve the password:
+
+```bash 
+su - devpos -c "kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d"
 ```
