@@ -25,3 +25,19 @@ jobs:
             
             - name: Push Docker image to DockerHub
               run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-app:${{ github.sha }}
+    
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout the code 
+              uses: actions/checkout@v3
+              with: 
+                token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+                fetch-depth: 0
+            - name: Install ArgoCD CLI 
+              run: |
+                  curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+                  chmod +x argocd 
+                  sudo mv argocd /usr/local/bin/argocd
+            
