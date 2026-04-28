@@ -1,0 +1,16 @@
+name: GitOps workflow with ArgoCD
+on: 
+    push:
+        branches:
+            - main 
+env:
+    PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+jobs: 
+    build: 
+        runs-on: ubuntu-latest 
+        steps:
+            - name: Checkout the code
+              uses: actions/checkout@v3
+              with: 
+                token: $PERSONAL_ACCESS_TOKEN
+                fetch-depth: 0
