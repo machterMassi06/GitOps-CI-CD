@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: massmach/my-app:70984ce51e95fb52c29137ed0e9895bab12d0eaa
+        image: massmach/my-app:f0528671d55a1843cb1e7a543da8660a1180bef0
         ports:
         - containerPort: 5000
