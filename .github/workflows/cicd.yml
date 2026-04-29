@@ -3,7 +3,9 @@ on:
     push:
         branches:
             - main 
-
+env : 
+  GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+  PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 jobs: 
     build: 
         runs-on: ubuntu-latest 
@@ -54,7 +56,19 @@ jobs:
                   git checkout main 
                   git pull origin main 
                   pwd 
-                  cat manifests-k8s/deployment.yaml
-                  pwd 
-                  sed -i "s+${{ secrets.DOCKERHUB_USERNAME }}/my-app.*+${{ secrets.DOCKERHUB_USERNAME }}/my-app:${{ github.sha }}+g" manifests-k8s/deployment.yaml
                   cat manifests-k8s/deployment.yml
+                  pwd 
+                  sed -i "s+${{ secrets.DOCKERHUB_USERNAME }}/my-app.*+${{ secrets.DOCKERHUB_USERNAME }}/my-app:${{ github.sha }}+g" manifests-k8s/deployment.yml
+                  cat manifests-k8s/deployment.yml
+
+            - name: Commit and Push Updated manifests-k8s/deployment.yml
+              run: |
+                  git config user.name "${{ secrets.GIT_USERNAME }}"
+                  git config user.email "${{ secrets.GIT_EMAIL }}"
+                  git remote set-url origin https://$GIT_USERNAME:$PERSONAL_ACCESS_TOKEN@github.com/${{ github.repository }}.git
+                  git fetch origin
+                  git checkout main
+                  git pull origin main
+                  git add .
+                  git commit -m "Update image to my-app:${{ github.sha }}"
+                  git push origin main            
