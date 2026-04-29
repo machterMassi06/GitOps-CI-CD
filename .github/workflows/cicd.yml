@@ -3,6 +3,8 @@ on:
     push:
         branches:
             - main 
+        paths-ignore:
+            - 'manifests-k8s/**' # ignore changes to manifest to prevent loop
 env : 
   GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
   PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
